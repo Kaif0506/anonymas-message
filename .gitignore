@@ -1,0 +1,20 @@
+# Node modules
+node_modules/
+npm-debug.log
+yarn-error.log
+.env
+.DS_Store
+
+# Build files
+/build
+/dist
+/.next
+/out
+
+# Logs
+logs/
+*.log
+
+# Editor files
+.vscode/
+.idea/
