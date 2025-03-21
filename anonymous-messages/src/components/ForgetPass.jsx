@@ -16,7 +16,7 @@ const ForgetPass = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/forgot-password`,
+        `https://anonymas-message.onrender.com/api/forgot-password`,
         { email }
       );
       
@@ -36,7 +36,7 @@ const ForgetPass = () => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:5000/api/verify-otp`, { email, otp });
+      const response = await axios.post(`https://anonymas-message.onrender.com/api/verify-otp`, { email, otp });
       toast.success(response.data.message);
       setIsOtpVerified(true);
     } catch (error) {

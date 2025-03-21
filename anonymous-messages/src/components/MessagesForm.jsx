@@ -12,7 +12,7 @@ const MessageForm = () => {
   // Function to send message
   const sendMessage = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/send", {
+      const response = await fetch("https://anonymas-message.onrender.com/api/send", {
         method: "POST", // FIXED: POST should be a string
         headers: {
           "Content-Type": "application/json",

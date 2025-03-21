@@ -9,7 +9,7 @@ const Messages = () => {
     const fetchMessages = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch(`http://localhost:5000/api/messages`,{
+        const response = await fetch(`https://anonymas-message.onrender.com/api/messages`,{
           method: 'GET',
           headers:{
             Authorization: token,

@@ -14,7 +14,7 @@ const PasswordReset = ({ email }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post(`http://localhost:5000/api/password-reset`, {
+      await axios.post(`https://anonymas-message.onrender.com/api/password-reset`, {
         email,
         newPassword,
       });

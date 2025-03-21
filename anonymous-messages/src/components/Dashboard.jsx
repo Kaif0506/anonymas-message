@@ -35,7 +35,7 @@ const Dashboard = () => {
 
       const fetchUserData = async () => {
         try {
-          const response = await fetch("http://localhost:5000/api/user", {
+          const response = await fetch("https://anonymas-message.onrender.com/api/user", {
             headers: { Authorization: token },
           });
           const data = await response.json();
@@ -47,7 +47,7 @@ const Dashboard = () => {
 
       const fetchMessages = async () => {
         try {
-          const response = await fetch(`http://localhost:5000/api/messages`, {
+          const response = await fetch(`https://anonymas-message.onrender.com/api/messages`, {
             headers: { Authorization: token },
           });
           const data = await response.json();
@@ -70,7 +70,7 @@ const Dashboard = () => {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:5000/api/messages/${messageId}`,{
+      const response = await fetch(`https://anonymas-message.onrender.com/api/messages/${messageId}`,{
         method: "DELETE",
         headers: {
           Authorization: token,
