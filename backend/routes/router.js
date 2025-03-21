@@ -110,7 +110,7 @@ router.post("/login", async (req, res) => {
 
     res.json({
       token,
-      link: `http://localhost:5173/user/${user.uniqueId}`,
+      link: `https://anonymas-message-1.onrender.com/${user.uniqueId}`,
       message: "Login successful!", // Now sending success message
     });
 
