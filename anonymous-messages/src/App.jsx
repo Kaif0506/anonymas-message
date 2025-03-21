@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { HashRouter , Route, Routes, Navigate } from "react-router-dom";
 import Home from "./components/Home";
 import { ToastContainer } from "react-toastify";
 import Dashboard from "./components/Dashboard";
@@ -14,7 +14,7 @@ const PrivateRoute = ({ children }) => {
 function App() {
   return (
     <>
-      <Router>
+      <HashRouter>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/forget-password" element={<ForgetPass />} />
@@ -22,7 +22,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         </Routes>
-      </Router>
+      </HashRouter>
       <ToastContainer position="top-right" autoClose={3000} />
     </>
   );
