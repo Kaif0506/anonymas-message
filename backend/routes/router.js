@@ -32,7 +32,7 @@ router.post("/generate", async (req, res) => {
     const token = jwt.sign({ uniqueId: uniqueId }, "secretkey");
     await Newuser.save();
     res.json({
-      link: `http://localhost:5173/user/${uniqueId}`,
+      link: `https://anonymas-message-1.onrender.com/user/${uniqueId}`,
       uniqueId,
       token,
     });
