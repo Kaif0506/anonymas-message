@@ -1,0 +1,23 @@
+services:
+  - name: mern-backend
+    type: web
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: "npm install"
+    startCommand: "node index.js"
+    envVars:
+      - key: PORT
+        value: "5000"
+      - key: MONGO_URI
+        value: "mongodb+srv://kaifclg2023:05062004@cluster0.1d4pl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+      - key: JWT_SECRET
+        value: "jwt1234"
+      - key: CRYPTO_SECRET
+        value: "cryptosec"
+      - key: EMAIL_FROM
+        value: "kaifclg2023@gmail.com"
+      - key: EMAIL_USER
+        value: "kaifclg2023@gmail.com"
+      - key: EMAIL_PASS
+        value: "ldkm uyqg qoyy yndl"

@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const User = require("../models/userSchema");
@@ -29,7 +30,7 @@ router.post("/generate", async (req, res) => {
       password: hashedPassword,
       uniqueId,
     });
-    const token = jwt.sign({ uniqueId: uniqueId }, "secretkey");
+    const token = jwt.sign({ uniqueId: uniqueId }, process.env.JWT_SECRET);
     await Newuser.save();
     res.json({
       link: `https://anonymas-message-1.onrender.com/user/${uniqueId}`,
@@ -48,7 +49,7 @@ const auth = (req, res, next) => {
     return res.status(401).json({ message: "No token, authorization denied" });
   }
   try {
-    const decode = jwt.verify(token, "secretkey");
+    const decode = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decode;
     next();
   } catch (error) {
@@ -80,7 +81,7 @@ router.post("/send", async (req, res) => {
       return res.status(400).json({ message: "Missing data" });
     const encryptedContent = CryptoJS.AES.encrypt(
       content,
-      "SECRET_KEY"
+      process.env.CRYPTO_SECRET
     ).toString();
     const message = new Message({ userId, content: encryptedContent });
     await message.save();
@@ -106,7 +107,7 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Incorrect password" });
     }
 
-    const token = jwt.sign({ uniqueId: user.uniqueId }, "secretkey");
+    const token = jwt.sign({ uniqueId: user.uniqueId }, process.env.JWT_SECRET);
 
     res.json({
       token,
@@ -135,7 +136,7 @@ router.get("/messages", auth, async (req, res) => {
 
     const decryptedMessages = messages.map((msg) => ({
       _id: msg._id, // Include _id to identify each message
-      decryptedMessage: CryptoJS.AES.decrypt(msg.content, "SECRET_KEY").toString(CryptoJS.enc.Utf8),
+      decryptedMessage: CryptoJS.AES.decrypt(msg.content, process.env.CRYPTO_SECRET).toString(CryptoJS.enc.Utf8),
     }));
 
     res.json(decryptedMessages);
@@ -198,7 +199,7 @@ router.post("/forgot-password",async(req,res)=>{
     otpStore[email] = {otp,expiresAt: Date.now() + 5 * 60 * 1000};
 
     await transporter.sendMail({
-      from: "kaifclg2023@gmail.com.com", // replace with your email
+      from: process.env.EMAIL_FROM, // replace with your email
       to:email,
       subject:"Your OTP for Password Reset",
       text:`Your OTP for password reset is ${otp}. It is valid for 5 Miniutes`,
