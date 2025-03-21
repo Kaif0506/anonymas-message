@@ -7,23 +7,24 @@ import Login from "./components/Login";
 import "react-toastify/dist/ReactToastify.css";
 import ForgetPass from "./components/ForgetPass";
 
-const PrivateRoute = ({ element }) => {
-  return localStorage.getItem("token") ? element : <Navigate to="/" />;
+const PrivateRoute = ({ children }) => {
+  return localStorage.getItem("token") ? children : <Navigate to="/login" />;
 };
 
 function App() {
   return (
     <>
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/forget-password" element={<ForgetPass/>} />
-        <Route path="/user/:userId" element={<MessageForm />} />
-        <Route path="/login" element={<Login/>} />
-        <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
-      </Routes>
-    </Router>
-    <ToastContainer position="top-right" autoClose={3000} /></>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/forget-password" element={<ForgetPass />} />
+          <Route path="/user/:userId" element={<MessageForm />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        </Routes>
+      </Router>
+      <ToastContainer position="top-right" autoClose={3000} />
+    </>
   );
 }
 
