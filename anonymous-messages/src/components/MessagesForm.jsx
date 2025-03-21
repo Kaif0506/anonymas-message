@@ -28,6 +28,8 @@ const MessageForm = () => {
       }
 
       const data = await response.json();
+      console.log(data);
+      console.log(userId)
       
       toast.success("Your message has been sent");
       setIsError(false); // Reset error state
