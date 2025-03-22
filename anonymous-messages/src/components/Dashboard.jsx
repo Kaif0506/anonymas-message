@@ -172,7 +172,7 @@ const Dashboard = () => {
             {messageLink && (
               <div className="mt-4 p-4 bg-gray-100 rounded-lg">
                 <p className="text-gray-700 text-sm mb-2 font-[500]">
-                  Your Link
+                  Your Link now you can share this link with your friends.
                 </p>
                 <div className="flex items-center justify-between bg-white border border-gray-300 rounded-lg p-2">
                   <input
