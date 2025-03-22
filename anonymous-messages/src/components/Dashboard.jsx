@@ -59,8 +59,8 @@ const Dashboard = () => {
       setCopied(false);
       fetchUserData();
       fetchMessages();
-    },
-    []
+    }, [messages]
+
   );
   const handleDeleteMessage = async (messageId) => {
     const token = localStorage.getItem("token");
