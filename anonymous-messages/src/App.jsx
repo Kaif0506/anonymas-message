@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter  as Router, Route, Routes, Navigate } from "react-router-dom";
 import Home from "./components/Home";
 import { ToastContainer } from "react-toastify";
 import Dashboard from "./components/Dashboard";
