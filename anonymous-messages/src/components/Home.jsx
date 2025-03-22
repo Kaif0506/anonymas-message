@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import PulseLoader from "react-spinners/PulseLoader";
+
 
 
 const Home = () => {
@@ -9,11 +11,14 @@ const Home = () => {
   const [password, setPassword] = useState("");
   const [messageLink, setMessageLink] = useState("");
   const [userId, setUserId] = useState(""); 
+  const [loading, setLoading] = useState(false);
+
   
   const navigate = useNavigate();
 
   // Generate link API call
   const generateLink = async () => {
+    setLoading(true);
     try {
       const response = await fetch("https://anonymas-message.onrender.com/api/generate", {
         method: "POST",
@@ -25,6 +30,7 @@ const Home = () => {
       const data = await response.json();
       if (!response.ok) {
         toast.error("Invalid credentials. Please try again.");
+        setLoading(false);
         return;
       }
       if (data.token) {
@@ -37,13 +43,17 @@ const Home = () => {
       
       const unique = (data.uniqueId); 
       setUserId(unique)
-      
-      
       setMessageLink(data.link);
       setCopied(false); 
+      setLoading(false);
+
     } catch (error) {
-      console.error(error);
+      setLoading(false);
+      toast.error("error");
+      
+
     }
+    setLoading(false);
   };
 
   
@@ -82,11 +92,29 @@ const Home = () => {
             Already have an account? <Link to={"/login"} className="text-blue-500 ">Login</Link>
           </div>
         <button
-          className="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg transition cursor-pointer"
-          onClick={generateLink}
-        >
-          Generate Link
-        </button>
+            className={`w-full  text-white font-semibold py-2 rounded-lg mt-3 shadow-md transition-transform transform hover:scale-105  cursor-pointer ${
+              loading
+                ? "bg-blue-500/50 cursor-not-allowed opacity-50"
+                : "bg-blue-500 hover:bg-blue-700"
+            }`}
+            disabled={loading}
+            onClick={generateLink}
+          >
+            {loading ? (
+              <div className="flex gap-5 justify-center items-center">
+                <PulseLoader
+                  color="#fff"
+                  margin={2}
+                  size={10}
+                  speedMultiplier={1}
+                />
+
+                <p className="text-gray-600 text-sm">Registering...</p>
+              </div>
+            ) : (
+              "Register"
+            )}
+          </button>
         
         
       </div>
