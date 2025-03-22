@@ -1,6 +1,14 @@
 {
   "rewrites": [
-    { "source": "/user/:id", "destination": "/index.html" },
+    { "source": "/user/:path*", "destination": "/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "s-maxage=0" }
+      ]
+    }
   ]
 }

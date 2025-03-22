@@ -30,7 +30,23 @@ const Dashboard = () => {
       }
       const link = localStorage.getItem("messageLink");
       if (link) {
-        setMessageLink(link);
+        // Make sure link uses the current domain if we're on a deployed site
+        try {
+          const storedUrl = new URL(link);
+          const currentUrl = new URL(window.location.href);
+          
+          // If domains don't match, update the link to use current domain
+          if (storedUrl.hostname !== currentUrl.hostname) {
+            const newLink = `${currentUrl.origin}/user/${storedUrl.pathname.split('/').pop()}`;
+            localStorage.setItem("messageLink", newLink);
+            setMessageLink(newLink);
+          } else {
+            setMessageLink(link);
+          }
+        } catch (error) {
+          console.error("Error parsing URL:", error);
+          setMessageLink(link);
+        }
       }
 
       const fetchUserData = async () => {

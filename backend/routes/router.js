@@ -79,11 +79,15 @@ router.post("/send", async (req, res) => {
     const { userId, content } = req.body;
     if (!userId || !content)
       return res.status(400).json({ message: "Missing data" });
+    
+    // Clean up userId to handle potential URL paths
+    const cleanUserId = userId.includes('/') ? userId.split('/').pop() : userId;
+    
     const encryptedContent = CryptoJS.AES.encrypt(
       content,
       process.env.CRYPTO_SECRET
     ).toString();
-    const message = new Message({ userId, content: encryptedContent });
+    const message = new Message({ userId: cleanUserId, content: encryptedContent });
     await message.save();
     res.json({ message: "Message send successfully" });
   } catch (error) {
