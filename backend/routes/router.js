@@ -33,7 +33,7 @@ router.post("/generate", async (req, res) => {
     const token = jwt.sign({ uniqueId: uniqueId }, process.env.JWT_SECRET);
     await Newuser.save();
     res.json({
-      link: `https://anonymous-messages-or63pwqj8-kaif-mondals-projects.vercel.app/user/${uniqueId}`,
+      link: `https://anonymous-messages-88wecmf5q-kaif-mondals-projects.vercel.app/user/${uniqueId}`,
       uniqueId,
       token,
     });
@@ -111,7 +111,7 @@ router.post("/login", async (req, res) => {
 
     res.json({
       token,
-      link: `https://anonymous-messages-or63pwqj8-kaif-mondals-projects.vercel.app/${user.uniqueId}`,
+      link: `https://anonymous-messages-88wecmf5q-kaif-mondals-projects.vercel.app/user/${user.uniqueId}`,
       message: "Login successful!", // Now sending success message
     });
 

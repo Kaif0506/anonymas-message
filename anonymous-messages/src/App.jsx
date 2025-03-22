@@ -21,6 +21,7 @@ function App() {
           <Route path="/user/:userId" element={<MessageForm />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>
       <ToastContainer position="top-right" autoClose={3000} />

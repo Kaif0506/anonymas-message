@@ -59,8 +59,7 @@ const Dashboard = () => {
       setCopied(false);
       fetchUserData();
       fetchMessages();
-    }, [messages]
-
+    }, [navigate]
   );
   const handleDeleteMessage = async (messageId) => {
     const token = localStorage.getItem("token");
@@ -81,7 +80,19 @@ const Dashboard = () => {
         return;
       }
       toast.success("Message deleted successfully.");
-      setMessages(messages.filter((msg)=> msg._id !== messageId));
+      // Refresh the messages after deletion
+      const fetchMessages = async () => {
+        try {
+          const response = await fetch(`https://anonymas-message.onrender.com/api/messages`, {
+            headers: { Authorization: token },
+          });
+          const data = await response.json();
+          setMessages(data);
+        } catch (error) {
+          console.error("Error fetching messages:", error);
+        }
+      };
+      fetchMessages();
     } catch (error) {
       console.error("Error deleting message:", error);
       
@@ -129,7 +140,7 @@ const Dashboard = () => {
                     key={index}
                     className="bg-blue-100 p-3 rounded-lg shadow-sm border-l-4 border-blue-500 relative"
                   >
-                    {msg}
+                    {msg.decryptedMessage}
 
                       <button className="absolute right-3 top-[13px] cursor-pointer "
                       onClick={()=>handleDeleteMessage(msg._id)}

@@ -38,9 +38,6 @@ export default function Login() {
       if (data.link) {
         localStorage.setItem("messageLink", data.link);
       window.location.href = "/dashboard";  
-
-
-
       }
       
   
