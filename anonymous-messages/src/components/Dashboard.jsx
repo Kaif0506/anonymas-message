@@ -129,7 +129,8 @@ const Dashboard = () => {
                     key={index}
                     className="bg-blue-100 p-3 rounded-lg shadow-sm border-l-4 border-blue-500 relative"
                   >
-                    {msg.decryptedMessage}
+                    {msg}
+
                       <button className="absolute right-3 top-[13px] cursor-pointer "
                       onClick={()=>handleDeleteMessage(msg._id)}
                       >

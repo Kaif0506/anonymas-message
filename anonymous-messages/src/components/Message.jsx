@@ -44,7 +44,8 @@ const Messages = () => {
                 key={index}
                 className="bg-gray-100 p-3 rounded-lg shadow-sm text-gray-800 border-l-4 border-blue-500"
               >
-                {msg}
+                {msg.decryptedMessage}
+
               </div>
             ))}
           </div>
