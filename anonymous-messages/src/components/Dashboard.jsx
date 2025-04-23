@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
 import { MdDeleteForever } from "react-icons/md";
 import { toast } from "react-toastify";
-
+import DOMPurify from "dompurify"; 
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -11,93 +11,93 @@ const Dashboard = () => {
   const [messageLink, setMessageLink] = useState("");
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
+
   const success = localStorage.getItem("success");
-  useEffect(()=>{
-    
-  if (success) {
-    toast.success(success);
-    localStorage.removeItem("success");
 
-  }
-  },[])
+  useEffect(() => {
+    if (success) {
+      toast.success(success);
+      localStorage.removeItem("success");
+    }
+  }, []);
 
-  useEffect(
-    () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        navigate("/login"); // Redirect if not logged in
-        return;
-      }
-      const link = localStorage.getItem("messageLink");
-      if (link) {
-        // Make sure link uses the current domain if we're on a deployed site
-        try {
-          const storedUrl = new URL(link);
-          const currentUrl = new URL(window.location.href);
-          
-          // If domains don't match, update the link to use current domain
-          if (storedUrl.hostname !== currentUrl.hostname) {
-            const newLink = `${currentUrl.origin}/user/${storedUrl.pathname.split('/').pop()}`;
-            localStorage.setItem("messageLink", newLink);
-            setMessageLink(newLink);
-          } else {
-            setMessageLink(link);
-          }
-        } catch (error) {
-          console.error("Error parsing URL:", error);
-          setMessageLink(link);
-        }
-      }
-
-      const fetchUserData = async () => {
-        try {
-          const response = await fetch("https://anonymas-message.onrender.com/api/user", {
-            headers: { Authorization: token },
-          });
-          const data = await response.json();
-          setUser(data);
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      };
-
-      const fetchMessages = async () => {
-        try {
-          const response = await fetch(`https://anonymas-message.onrender.com/api/messages`, {
-            headers: { Authorization: token },
-          });
-          const data = await response.json();
-          setMessages(data);
-        } catch (error) {
-          console.error("Error fetching messages:", error);
-        }
-      };
-      setCopied(false);
-      fetchUserData();
-      fetchMessages();
-    }, [navigate]
-  );
-  const handleDeleteMessage = async (messageId) => {
+  useEffect(() => {
     const token = localStorage.getItem("token");
-    if(!token){
-      navigate("/login"); // Redirect if not logged in
+    if (!token) {
+      navigate("/login");
       return;
     }
+
+    const link = localStorage.getItem("messageLink");
+    if (link) {
+      try {
+        const storedUrl = new URL(link);
+        const currentUrl = new URL(window.location.href);
+
+        if (storedUrl.hostname !== currentUrl.hostname) {
+          const newLink = `${currentUrl.origin}/user/${storedUrl.pathname.split('/').pop()}`;
+          localStorage.setItem("messageLink", newLink);
+          setMessageLink(newLink);
+        } else {
+          setMessageLink(link);
+        }
+      } catch (error) {
+        console.error("Error parsing URL:", error);
+        setMessageLink(link);
+      }
+    }
+
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch("https://anonymas-message.onrender.com/api/user", {
+          headers: { Authorization: token },
+        });
+        const data = await response.json();
+        setUser(data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch(`https://anonymas-message.onrender.com/api/messages`, {
+          headers: { Authorization: token },
+        });
+        const data = await response.json();
+        setMessages(data);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    };
+
+    setCopied(false);
+    fetchUserData();
+    fetchMessages();
+  }, [navigate]);
+
+  const handleDeleteMessage = async (messageId) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
     try {
-      const response = await fetch(`https://anonymas-message.onrender.com/api/messages/${messageId}`,{
+      const response = await fetch(`https://anonymas-message.onrender.com/api/messages/${messageId}`, {
         method: "DELETE",
         headers: {
           Authorization: token,
         },
       });
-      if(!response.ok){
-        toast.error(response.data.message);
-        
+
+      if (!response.ok) {
+        toast.error("Error deleting message.");
         return;
       }
+
       toast.success("Message deleted successfully.");
-      // Refresh the messages after deletion
-      const fetchMessages = async () => {
+      const refreshMessages = async () => {
         try {
           const response = await fetch(`https://anonymas-message.onrender.com/api/messages`, {
             headers: { Authorization: token },
@@ -108,13 +108,11 @@ const Dashboard = () => {
           console.error("Error fetching messages:", error);
         }
       };
-      fetchMessages();
+      refreshMessages();
     } catch (error) {
       console.error("Error deleting message:", error);
-      
     }
-
-  }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -123,12 +121,12 @@ const Dashboard = () => {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(messageLink);
-    setCopied(true); // Show success message
+    setCopied(true);
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 p-6">
-      <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg transform transition duration-300 hover:scale-105">
+      <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl transform transition duration-300 hover:scale-100">
         <h1 className="text-3xl font-extrabold text-gray-800 text-center mb-4">
           Welcome to Your Dashboard
         </h1>
@@ -136,17 +134,12 @@ const Dashboard = () => {
         {user ? (
           <div className="mt-4 text-gray-700 space-y-4">
             <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
-              <p className="text-lg">
-                <strong>Name:</strong> {user.username}
-              </p>
-              <p className="text-lg">
-                <strong>Email:</strong> {user.email}
-              </p>
+              <p className="text-lg"><strong>Name:</strong> {user.username}</p>
+              <p className="text-lg"><strong>Email:</strong> {user.email}</p>
             </div>
 
-            <h2 className="text-xl font-semibold text-gray-800 mt-6">
-              Messages
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-800 mt-6">Messages</h2>
+
             {messages.length === 0 ? (
               <p className="text-gray-500">No messages yet.</p>
             ) : (
@@ -154,16 +147,20 @@ const Dashboard = () => {
                 {messages.map((msg, index) => (
                   <li
                     key={index}
-                    className="bg-blue-100 p-3 rounded-lg shadow-sm border-l-4 border-blue-500 relative"
+                    className="bg-blue-100 p-5 rounded-lg shadow-sm border-l-4  border-blue-500 relative "
                   >
-                    {msg.decryptedMessage}
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(msg.decryptedMessage),
+                      }}
+                    />
 
-                      <button className="absolute right-3 top-[13px] cursor-pointer "
-                      onClick={()=>handleDeleteMessage(msg._id)}
-                      >
-                        
-                        <MdDeleteForever className="text-[24px] text-red-500"/>
-                      </button>
+                    <button
+                      className="absolute right-3 top-[10px] cursor-pointer"
+                      onClick={() => handleDeleteMessage(msg._id)}
+                    >
+                      <MdDeleteForever className="text-[24px] text-red-500" />
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -172,7 +169,7 @@ const Dashboard = () => {
             {messageLink && (
               <div className="mt-4 p-4 bg-gray-100 rounded-lg">
                 <p className="text-gray-700 text-sm mb-2 font-[500]">
-                  Your Link now you can share this link with your friends.
+                  Your Link — share it with your friends:
                 </p>
                 <div className="flex items-center justify-between bg-white border border-gray-300 rounded-lg p-2">
                   <input
@@ -202,13 +199,8 @@ const Dashboard = () => {
             </button>
           </div>
         ) : (
-          <div className="loader flex justify-center" >
-            <PulseLoader
-            color="#2cc18a"
-            margin={2}
-            size={10}
-            speedMultiplier={1}
-          />
+          <div className="loader flex justify-center">
+            <PulseLoader color="#2cc18a" margin={2} size={10} speedMultiplier={1} />
           </div>
         )}
       </div>

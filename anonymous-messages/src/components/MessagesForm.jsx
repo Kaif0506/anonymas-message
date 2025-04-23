@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import PulseLoader from "react-spinners/PulseLoader";
+import { Editor } from "@tinymce/tinymce-react";
 
 const MessageForm = () => {
   const { userId } = useParams();
@@ -11,7 +12,7 @@ const MessageForm = () => {
   const [isError, setIsError] = useState(false);
 
   const sendMessage = async () => {
-    if (!message.trim()) {
+    if (!message.trim() || message === "<p></p>") {
       toast.error("You have to write something!");
       setIsError(true);
       setResponseMsg("You have to write something...");
@@ -59,15 +60,22 @@ const MessageForm = () => {
           Write your message below and send it anonymously!
         </p>
 
-        <textarea
-          placeholder="Type your message..."
+        <Editor
+          apiKey="e8iaqsuh5ursxkjac9k1d1x7o6w39092a2e2shdat8tdwzd0" // Optional if you're self-hosting TinyMCE
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          className="w-full h-40 p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-pink-400 transition resize-none shadow-sm text-sm sm:text-base"
+          init={{
+            height: 200,
+            menubar: false,
+            placeholder: "Type your message...",
+            plugins: ["link", "lists", "autolink", "paste", "wordcount"],
+            toolbar:
+              "undo redo | bold italic underline | bullist numlist | removeformat",
+          }}
+          onEditorChange={(newValue) => setMessage(newValue)}
         />
 
         <button
-          className={`mt-5 w-full text-white font-semibold py-3 rounded-xl shadow-md transition-transform transform hover:scale-105 sm:text-lg cursor-pointer ${
+          className={`mt-5 w-full text-white font-semibold py-3 rounded-xl shadow-md transition-transform transform hover:scale-105 sm:text-lg ${
             loading
               ? "bg-pink-500/50 cursor-not-allowed opacity-50"
               : "bg-pink-500 hover:bg-pink-600"
@@ -86,7 +94,11 @@ const MessageForm = () => {
         </button>
 
         {responseMsg && (
-          <p className={`mt-3 text-sm sm:text-base font-medium ${isError ? "text-red-600" : "text-green-600"}`}>
+          <p
+            className={`mt-3 text-sm sm:text-base font-medium ${
+              isError ? "text-red-600" : "text-green-600"
+            }`}
+          >
             {responseMsg}
           </p>
         )}
